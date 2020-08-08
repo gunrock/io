@@ -568,7 +568,11 @@ def normalizeByGunrock(dest, quantityToNormalize, columnsToGroup):
 def normalizeByTag(dest, tag, quantityToNormalize, columnsToGroup):
     # http://stackoverflow.com/questions/41517420/pandas-normalize-values-within-groups-with-one-reference-value-per-group-group#41517726
     def fn(df):
-        df1 = df.loc[df["tag"] == tag, columnsToGroup + [quantityToNormalize]]
+        # https://stackoverflow.com/questions/63311153/pandas-how-to-see-if-an-argument-string-is-in-a-list-of-strings-that-is-in-a
+        df1 = df.loc[
+            df["tag"].explode().eq(tag).loc[lambda x: x].index,
+            columnsToGroup + [quantityToNormalize],
+        ]
         suffix = "_ref"
         dfmerge = pandas.merge(df, df1, on=columnsToGroup, suffixes=["", suffix])
         dfmerge[dest] = (
