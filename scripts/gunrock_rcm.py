@@ -31,6 +31,12 @@ fnPreprocessDF = [
     mergeAllUpperCasePrimitives,
     selectAnyOfThese("primitive", prims),
     deleteZero("avg_process_time"),
+    normalizeByTag(
+        dest="speedup_vs_norcm",
+        tag="no-rcm",
+        quantityToNormalize="avg_process_time",
+        columnsToGroup=["primitive", "dataset", "advance_mode", "mark_pred"],
+    ),
     addJSONDetailsLink,
     gunrockVersionGPU,
 ]
@@ -60,6 +66,7 @@ columnsOfInterest = [
     "dataset",
     "avg_mteps",
     "avg_process_time",
+    "speedup_vs_norcm",
     "engine",
     "gunrock_version",
     "gpuinfo_name",
@@ -96,6 +103,11 @@ for prim in prims:
 
     if prim == "pr":
         del my[pt]["col"]
+
+    pt_norm = (prim, "norm")
+    my[pt_norm] = my[pt].copy()
+    my[pt_norm]["y"] = ("speedup_vs_norcm:Q", "Speedup vs. no-rcm", "log")
+
 
 for primtuple in my:
     primitive = primtuple[0]
@@ -139,6 +151,7 @@ for primtuple in my:
                 "64bit_ValueT",
                 "avg_mteps:Q",
                 "avg_process_time:Q",
+                "speedup_vs_norcm:Q",
                 "details",
             ],
         )
