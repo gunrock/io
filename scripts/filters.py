@@ -80,6 +80,12 @@ def SSSPtosssp(df):
     return df
 
 
+def lowercasePrimitives(df):
+    df.loc[df.primitive == "SSSP", "primitive"] = "sssp"
+    df.loc[df.primitive == "PR", "primitive"] = "pr"
+    return df
+
+
 def mergeAllUpperCasePrimitives(df):
     df.loc[df.primitive == "SSSP", "primitive"] = "sssp"
     df.loc[df.primitive == "BC", "primitive"] = "bc"

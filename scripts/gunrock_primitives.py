@@ -30,7 +30,7 @@ fnPreprocessDF = [
     # convertCtimeStringToDatetime,
     # normalizePRMTEPS,
     mergeAlgorithmIntoPrimitive,
-    SSSPtosssp,
+    lowercasePrimitives,
     renameAdvanceModeWithAHyphen,
     addJSONDetailsLink,
     gunrockVersionGPU,
