@@ -12,7 +12,7 @@ from logic import *
 name = "graphblast-pull-pr-200901"
 # begin user settings for this script
 roots = [
-    "../gunrock-output/v1-0-0/pr",
+    "../gunrock-output/v1-0-0",
 ]
 fnFilterInputFiles = [
     fileEndsWithJSON,
@@ -25,15 +25,20 @@ def renameAlgToPrim(df):
 
 
 fnPreprocessDF = [
-    # convertCtimeStringToDatetime,
-    # normalizePRMTEPS,
-    # tupleify('tag'),
-    renameAlgToPrim,
-    mergeAllUpperCasePrimitives,
+    # this is 1.0+ only so we don't have to do a bunch of the normal filters
     lowercasePrimitives,
     normalizePRByIterations,
     renameColumnsWithMinus,
-    selectAnyOfThese("primitive", ["pr"]),
+    equateNVIDIAGPUs,
+]
+fnFilterDFRows = [
+    undirectedOnly,
+    selectAnyOfThese("primitive", ["pr", "bfs", "sssp", "tc"]),
+    selectAnyOfThese("gpuinfo_name", ["TITAN V", "Tesla K40/80"]),
+    # get rid of PR push
+    lambda df: df[(df["primitive"] != "pr") | (df["pull"] == True)],
+    # 1.0 only
+    lambda df: df[df["gunrock_version"].str.startswith("1.")],
     # soc-ork soc-lj h09 i04 rmat-22 rmat-23 rmat-24 rgg road_usa
     selectAnyOfThese(
         "dataset",
@@ -49,15 +54,15 @@ fnPreprocessDF = [
             "soc-LiveJournal1",
         ],
     ),
-    selectAnyOfThese("pull", [True]),
     keepFastestAvgProcessTime(
-        ["primitive", "dataset", "undirected",], sortBy="avg_process_time",
+        ["primitive", "dataset", "undirected", "gpuinfo_name",],
+        sortBy="avg_process_time",
     ),
+]
+fnPostprocessDF = [
     addJSONDetailsLink,
     gunrockVersionGPU,
 ]
-fnFilterDFRows = []
-fnPostprocessDF = []
 # end user settings for this script
 
 # actual program logic
@@ -102,7 +107,7 @@ save(
     df=df,
     plotname=plotname,
     formats=["tablehtml", "tablemd",],
-    sortby=["dataset", "primitive", "gpuinfo_name", "undirected", "gunrock_version",],
+    sortby=["primitive", "dataset", "gpuinfo_name", "undirected", "gunrock_version",],
     columns=columnsOfInterest,
 )
 
@@ -110,6 +115,7 @@ columnsOfInterest = [
     "primitive",
     "dataset",
     "avg_process_time",
+    "gpuinfo_name",
     "undirected",
     "details",
 ]
@@ -123,6 +129,6 @@ save(
     df=df,
     plotname=plotname + "_abbrev",
     formats=["tablehtml", "tablemd",],
-    sortby=["dataset", "primitive", "undirected",],
+    sortby=["primitive", "dataset", "gpuinfo_name",],
     columns=columnsOfInterest,
 )
