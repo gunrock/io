@@ -83,6 +83,7 @@ def SSSPtosssp(df):
 def lowercasePrimitives(df):
     df.loc[df.primitive == "SSSP", "primitive"] = "sssp"
     df.loc[df.primitive == "PR", "primitive"] = "pr"
+    df.loc[df.primitive == "TC", "primitive"] = "tc"
     return df
 
 
