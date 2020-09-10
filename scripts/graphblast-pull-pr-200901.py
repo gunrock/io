@@ -43,19 +43,29 @@ fnFilterDFRows = [
     selectAnyOfThese(
         "dataset",
         [
-            "rmat_n22_e64.000000",
-            "soc-orkut",
-            "indochina-2004",
-            "rmat_n24_e16.000000",
-            "rmat_n23_e32.000000",
-            "rgg_n_2_24_s0",
-            "road_usa",
+            "cit-Patents",
+            "coAuthorsCiteseer",
+            "coPapersDBLP",
+            "com-orkut",
             "hollywood-2009",
+            "indochina-2004",
+            "rgg_n_2_24_s0",
+            "rmat_n22_e64.000000",
+            "rmat_n23_e32.000000",
+            "rmat_n24_e16.000000",
+            "road_central",
+            "road_usa",
             "soc-LiveJournal1",
+            "soc-orkut",
         ],
     ),
     keepFastestAvgProcessTime(
-        ["primitive", "dataset", "undirected", "gpuinfo_name",],
+        [
+            "primitive",
+            "dataset",
+            "undirected",
+            "gpuinfo_name",
+        ],
         sortBy="avg_process_time",
     ),
 ]
@@ -84,7 +94,6 @@ columnsOfInterest = [
     "dataset",
     "avg_mteps",
     "avg_process_time",
-    "postprocess_time",
     "engine",
     "gunrock_version",
     "gpuinfo_name",
@@ -106,8 +115,17 @@ save(
     chart=c,
     df=df,
     plotname=plotname,
-    formats=["tablehtml", "tablemd",],
-    sortby=["primitive", "dataset", "gpuinfo_name", "undirected", "gunrock_version",],
+    formats=[
+        "tablehtml",
+        "tablemd",
+    ],
+    sortby=[
+        "primitive",
+        "dataset",
+        "gpuinfo_name",
+        "undirected",
+        "gunrock_version",
+    ],
     columns=columnsOfInterest,
 )
 
@@ -128,7 +146,14 @@ save(
     chart=c,
     df=df,
     plotname=plotname + "_abbrev",
-    formats=["tablehtml", "tablemd",],
-    sortby=["primitive", "dataset", "gpuinfo_name",],
+    formats=[
+        "tablehtml",
+        "tablemd",
+    ],
+    sortby=[
+        "primitive",
+        "dataset",
+        "gpuinfo_name",
+    ],
     columns=columnsOfInterest,
 )
