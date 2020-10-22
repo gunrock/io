@@ -84,6 +84,7 @@ def lowercasePrimitives(df):
     df.loc[df.primitive == "SSSP", "primitive"] = "sssp"
     df.loc[df.primitive == "PR", "primitive"] = "pr"
     df.loc[df.primitive == "TC", "primitive"] = "tc"
+    df.loc[df.primitive == "CC", "primitive"] = "cc"
     return df
 
 
@@ -154,6 +155,10 @@ def normalizePRByIterations(df):
 
 def renameGpuinfoname(df):
     return df.rename(columns={"gpuinfo_name": "gpuinfo_name"})
+
+
+def mergeMTEPSToAvgMTEPS(df):
+    return merge(df, dst="avg-mteps", src="m_teps", delete=True)
 
 
 def mergeIdempotentToIdempotence(df):

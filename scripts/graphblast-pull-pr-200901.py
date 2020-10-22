@@ -11,34 +11,30 @@ from logic import *
 
 name = "graphblast-pull-pr-200901"
 # begin user settings for this script
-roots = [
-    "../gunrock-output/v1-0-0",
-]
+roots = ["../gunrock-output/v1-0-0", "../gunrock-output/v0-5-1/cc"]
 fnFilterInputFiles = [
     fileEndsWithJSON,
     fileNotInArchiveDir,
 ]
 
-
-def renameAlgToPrim(df):
-    return df.rename(columns={"algorithm": "primitive"})
-
-
 fnPreprocessDF = [
-    # this is 1.0+ only so we don't have to do a bunch of the normal filters
+    mergeAlgorithmIntoPrimitive,
     lowercasePrimitives,
+    mergeMTEPSToAvgMTEPS,
+    lambda df: merge(df, dst="num-vertices", src="num_vertices", delete=True),
+    lambda df: merge(df, dst="num-edges", src="num_edges", delete=True),
+    mergeElapsedIntoAvgProcessTime,
+    mergeGunrockVersionWithUnderscoreIntoHyphen,
     normalizePRByIterations,
     renameColumnsWithMinus,
     equateNVIDIAGPUs,
 ]
 fnFilterDFRows = [
     undirectedOnly,
-    selectAnyOfThese("primitive", ["pr", "bfs", "sssp", "tc"]),
+    selectAnyOfThese("primitive", ["pr", "bfs", "sssp", "tc", "cc"]),
     selectAnyOfThese("gpuinfo_name", ["TITAN V", "Tesla K40/80"]),
     # get rid of PR push
     lambda df: df[(df["primitive"] != "pr") | (df["pull"] == True)],
-    # 1.0 only
-    lambda df: df[df["gunrock_version"].str.startswith("1.")],
     # soc-ork soc-lj h09 i04 rmat-22 rmat-23 rmat-24 rgg road_usa
     selectAnyOfThese(
         "dataset",
@@ -157,3 +153,5 @@ save(
     ],
     columns=columnsOfInterest,
 )
+
+# pandoc -i graphblast-pull-pr-200901_table.html -t gfm -o graphblast-pull-pr-200901_table.md
