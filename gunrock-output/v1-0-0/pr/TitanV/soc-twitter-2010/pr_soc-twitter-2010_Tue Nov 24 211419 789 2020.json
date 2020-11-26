@@ -1,0 +1,15 @@
+{
+    "avg-process-time": -1,
+    "engine": "Gunrock",
+    "command-line": "../../../build/bin/pr market /data/gunrock/gunrock_dataset/mario-2TB/large/soc-twitter-2010/soc-twitter-2010.mtx --num-runs=10 --quick --device=0 --src=random --64bit-SizeT=false,true --64bit-VertexT=false,true --pull=false,true --advance-mode=LB_CULL,LB,TWC --tag=Gunrock-v1-0-0_TitanV --jsondir=./TitanV//soc-twitter-2010",
+    "json-schema": "2019-09-20",
+    "compiler": "Gnu GCC C/C++",
+    "compiler-version": 90300000,
+    "time": "Tue Nov 24 21:14:19 2020\n",
+    "gunrock-version": "1.2.0",
+    "git-commit-sha": "cd82e3161db3be2efe5d777589054dcfeb919799",
+    "primitive": "PR",
+    "stddev-degree": 413.3321838378906,
+    "num-vertices": 21297772,
+    "num-edges": 530051090
+}
