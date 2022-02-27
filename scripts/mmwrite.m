@@ -145,13 +145,13 @@ if ( issparse(A) )
   cplxformat = sprintf('%%d %%d %% .%dg %% .%dg\n',precision,precision);
   realformat = sprintf('%%d %%d %% .%dg\n',precision);
   if ( strcmp(mattype,'real') )
-      fprintf(mmfile,realformat,I,J,V);
+      fprintf(mmfile,realformat,[I';J';V']);
   elseif ( strcmp(mattype,'complex') )
   for i=1:NZ
      fprintf(mmfile,cplxformat,I(i),J(i),real(V(i)),imag(V(i)));
   end;
   elseif ( strcmp(mattype,'pattern') )
-      fprintf(mmfile,'%d %d\n',I,J);
+      fprintf(mmfile,'%d %d\n',[I';J']);
   else  
      err = -1;
      disp('Unsupported mattype:')
